@@ -1,0 +1,500 @@
+casa:house:1
+mesa:table:1
+vida:life:1
+mano:hand:1
+pelo:hair:1
+ropa:clothes:1
+hijo:son:1
+hija:daughter:1
+gato:cat:1
+pato:duck:1
+dedo:finger:1
+codo:elbow:1
+cara:face:1
+boca:mouth:1
+vino:wine:1
+agua:water:1
+aire:air:1
+alto:tall:1
+bajo:low:1
+malo:bad:1
+ojos:eyes:1
+piso:floor:1
+pera:pear:1
+rosa:rose:1
+caro:expensive:1
+cero:zero:1
+rico:tasty:1
+seco:dry:1
+foto:photo:1
+lago:lake:1
+mapa:map:1
+nube:cloud:1
+nota:note:1
+hora:hour:1
+cama:bed:1
+copa:glass:1
+sopa:soup:1
+duro:hard:1
+puro:pure:1
+rato:a while:1
+pago:payment:1
+jugo:juice:1
+lobo:wolf:1
+mono:monkey:1
+humo:smoke:1
+mudo:mute:1
+nido:nest:1
+rana:frog:1
+toro:bull:1
+vaca:cow:1
+gris:grey:1
+azul:blue:1
+cien:hundred:1
+once:eleven:1
+doce:twelve:1
+cosa:thing:1
+caja:box:1
+hoja:leaf:1
+baño:bathroom:1
+niño:child:1
+amor:love:1
+olor:smell:1
+flor:flower:1
+esos:those:1
+esta:this:1
+todo:everything:1
+nada:nothing:1
+cada:each:1
+algo:something:1
+poco:little:1
+otro:other:1
+como:how:1
+pero:but:1
+para:for:1
+modo:way:1
+tipo:type:1
+caer:to fall:1
+leer:to read:1
+usar:to use:1
+amar:to love:1
+atar:to tie:1
+jefe:boss:1
+vela:candle:1
+bola:ball:1
+pino:pine:1
+cola:tail:1
+mula:mule:1
+gota:drop:1
+ruta:route:1
+moto:motorbike:1
+auto:car:1
+isla:island:1
+sala:living room:1
+piel:skin:1
+miel:honey:1
+bota:boot:1
+meta:goal:1
+masa:dough:1
+tasa:rate:1
+taza:cup:1
+abrir:to open:2
+aguas:waters:2
+ahora:now:2
+altos:tall:2
+amiga:friend:2
+amigo:friend:2
+andar:to walk:2
+antes:before:2
+arroz:rice:2
+audio:audio:2
+ayuda:help:2
+baile:dance:2
+banco:bank:2
+barco:boat:2
+beber:to drink:2
+bella:beautiful:2
+bello:beautiful:2
+besar:to kiss:2
+besos:kisses:2
+blusa:blouse:2
+bolsa:bag:2
+buena:good:2
+bueno:good:2
+busca:search:2
+calle:street:2
+calor:heat:2
+camas:beds:2
+campo:field:2
+carne:meat:2
+carta:letter:2
+casas:houses:2
+cerca:near:2
+cerdo:pig:2
+chico:boy:2
+chica:girl:2
+cielo:sky:2
+cinco:five:2
+clase:class:2
+clima:climate:2
+corta:short:2
+corto:short:2
+crema:cream:2
+cueva:cave:2
+danza:dance:2
+dieta:diet:2
+disco:disc:2
+dolor:pain:2
+donde:where:2
+dulce:sweet:2
+enero:january:2
+entre:between:2
+estar:to be:2
+estos:these:2
+falda:skirt:2
+fruta:fruit:2
+fuego:fire:2
+fuera:outside:2
+ganas:desire:2
+gente:people:2
+gordo:fat:2
+gripe:flu:2
+grupo:group:2
+guapo:handsome:2
+guapa:pretty:2
+gusto:taste:2
+habla:speaks:2
+hacer:to do:2
+hasta:until:2
+hielo:ice:2
+hijos:children:2
+horas:hours:2
+hotel:hotel:2
+huevo:egg:2
+igual:equal:2
+jabon:soap:2
+juego:game:2
+jugar:to play:2
+julio:july:2
+junio:june:2
+junto:together:2
+largo:long:2
+leche:milk:2
+libro:book:2
+limon:lemon:2
+lista:list:2
+llega:arrives:2
+lleva:carries:2
+lunes:monday:2
+madre:mother:2
+manos:hands:2
+marzo:march:2
+mayor:older:2
+media:half:2
+medio:half:2
+mejor:better:2
+menos:less:2
+metro:metro:2
+miedo:fear:2
+mirar:to look:2
+mismo:same:2
+camino:road:3
+tomate:tomato:3
+camisa:shirt:3
+zapato:shoe:3
+ciudad:city:3
+cocina:kitchen:3
+sombra:shadow:3
+abrazo:hug:3
+pelota:ball:3
+guante:glove:3
+puente:bridge:3
+fuente:fountain:3
+diente:tooth:3
+verano:summer:3
+bosque:forest:3
+parque:park:3
+dinero:money:3
+tienda:shop:3
+cuento:tale:3
+camion:truck:3
+fresco:fresh:3
+helado:ice cream:3
+huevos:eggs:3
+frutas:fruits:3
+blanco:white:3
+amplio:wide:3
+oscuro:dark:3
+brillo:shine:3
+ligero:light:3
+pesado:heavy:3
+fuerte:strong:3
+rapido:fast:3
+abuela:grandmother:3
+abuelo:grandfather:3
+hombre:man:3
+amigos:friends:3
+vecino:neighbour:3
+doctor:doctor:3
+medico:doctor:3
+herida:wound:3
+sangre:blood:3
+cuerpo:body:3
+cabeza:head:3
+hombro:shoulder:3
+muñeca:wrist:3
+lengua:tongue:3
+pulmon:lung:3
+empleo:job:3
+sueldo:salary:3
+ventas:sales:3
+precio:price:3
+barato:cheap:3
+moneda:coin:3
+cuenta:account:3
+ahorro:saving:3
+gastar:to spend:3
+cobrar:to charge:3
+vender:to sell:3
+brazos:arms:3
+nombre:name:3
+numero:number:3
+letras:letters:3
+frases:phrases:3
+idioma:language:3
+ingles:english:3
+correr:to run:3
+saltar:to jump:3
+bailar:to dance:3
+cantar:to sing:3
+hablar:to speak:3
+dormir:to sleep:3
+volver:to return:3
+sentir:to feel:3
+pensar:to think:3
+querer:to want:3
+seguir:to follow:3
+llegar:to arrive:3
+buscar:to search:3
+llamar:to call:3
+quedar:to stay:3
+llevar:to carry:3
+entrar:to enter:3
+cerrar:to close:3
+romper:to break:3
+perder:to lose:3
+contar:to count:3
+ayudar:to help:3
+crecer:to grow:3
+mentir:to lie:3
+triste:sad:3
+alegre:cheerful:3
+amable:kind:3
+grande:big:3
+bonito:pretty:3
+limpio:clean:3
+mojado:wet:3
+agosto:august:3
+sabado:saturday:3
+martes:tuesday:3
+jueves:thursday:3
+hermano:brother:4
+hermana:sister:4
+familia:family:4
+persona:person:4
+trabajo:job:4
+sobrino:nephew:4
+sobrina:niece:4
+abogado:lawyer:4
+maestro:teacher:4
+cocinar:to cook:4
+caminar:to walk:4
+comprar:to buy:4
+recibir:to receive:4
+ofrecer:to offer:4
+enseñar:to teach:4
+empezar:to begin:4
+estudio:study:4
+oficina:office:4
+reunion:meeting:4
+informe:report:4
+mensaje:message:4
+palabra:word:4
+oracion:sentence:4
+lectura:reading:4
+escuela:school:4
+ventana:window:4
+armario:wardrobe:4
+estante:shelf:4
+lampara:lamp:4
+cortina:curtain:4
+cuchara:spoon:4
+tenedor:fork:4
+botella:bottle:4
+cerveza:beer:4
+naranja:orange:4
+manzana:apple:4
+pescado:fish:4
+verdura:vegetable:4
+lechuga:lettuce:4
+cebolla:onion:4
+galleta:cookie:4
+vinagre:vinegar:4
+mostaza:mustard:4
+caballo:horse:4
+gallina:hen:4
+tortuga:turtle:4
+ballena:whale:4
+camello:camel:4
+hormiga:ant:4
+gaviota:seagull:4
+montaña:mountain:4
+cascada:waterfall:4
+sendero:path:4
+caminos:roads:4
+arboles:trees:4
+semilla:seed:4
+girasol:sunflower:4
+naranjo:orange tree:4
+terraza:terrace:4
+piscina:pool:4
+nublado:cloudy:4
+soleado:sunny:4
+ventoso:windy:4
+domingo:sunday:4
+viernes:friday:4
+semanas:weeks:4
+minutos:minutes:4
+segundo:second:4
+momento:moment:4
+horario:schedule:4
+deporte:sport:4
+partido:match:4
+jugador:player:4
+estadio:stadium:4
+campeon:champion:4
+arquero:goalkeeper:4
+defensa:defence:4
+carrera:race:4
+maraton:marathon:4
+cancion:song:4
+bateria:drums:4
+melodia:melody:4
+artista:artist:4
+pintura:painting:4
+retrato:portrait:4
+galeria:gallery:4
+actores:actors:4
+funcion:show:4
+entrada:entrance:4
+enfermo:sick:4
+remedio:remedy:4
+vendaje:bandage:4
+heridas:wounds:4
+dolores:pains:4
+sintoma:symptom:4
+mareado:dizzy:4
+autobus:bus:4
+aviones:planes:4
+bosques:forests:4
+glaciar:glacier:4
+hospital:hospital:5
+mariposa:butterfly:5
+elefante:elephant:5
+estrella:star:5
+montañas:mountains:5
+desierto:desert:5
+invierno:winter:5
+estacion:station:5
+hermanos:siblings:5
+hermanas:sisters:5
+familias:families:5
+personas:people:5
+edificio:building:5
+escalera:staircase:5
+ascensor:lift:5
+ventanas:windows:5
+armarios:wardrobes:5
+cortinas:curtains:5
+cocinero:cook:5
+camarero:waiter:5
+abogados:lawyers:5
+profesor:professor:5
+director:director:5
+vendedor:seller:5
+clientes:clients:5
+empresas:companies:5
+negocios:businesses:5
+mercados:markets:5
+producto:product:5
+servicio:service:5
+trabajos:jobs:5
+proyecto:project:5
+contrato:contract:5
+facturas:invoices:5
+acuerdos:agreements:5
+economia:economy:5
+politica:politics:5
+gobierno:government:5
+historia:history:5
+ciencias:sciences:5
+biologia:biology:5
+medicina:medicine:5
+farmacia:pharmacy:5
+sintomas:symptoms:5
+vitamina:vitamin:5
+deportes:sports:5
+estadios:stadiums:5
+natacion:swimming:5
+gimnasia:gymnastics:5
+ciclista:cyclist:5
+guitarra:guitar:5
+trompeta:trumpet:5
+violines:violins:5
+orquesta:orchestra:5
+melodias:melodies:5
+artistas:artists:5
+pinturas:paintings:5
+retratos:portraits:5
+escultor:sculptor:5
+galerias:galleries:5
+vestidos:dresses:5
+camiseta:t-shirt:5
+pantalon:trousers:5
+chaqueta:jacket:5
+sombrero:hat:5
+calcetin:sock:5
+alimento:food:5
+desayuno:breakfast:5
+almuerzo:lunch:5
+pescados:fish:5
+mariscos:seafood:5
+verduras:vegetables:5
+manzanas:apples:5
+naranjas:oranges:5
+platanos:bananas:5
+ensalada:salad:5
+galletas:cookies:5
+caramelo:candy:5
+refresco:soft drink:5
+cervezas:beers:5
+caballos:horses:5
+animales:animals:5
+tortugas:turtles:5
+gaviotas:seagulls:5
+hormigas:ants:5
+bombilla:lightbulb:5
+almohada:pillow:5
+lavadora:washing machine:5
+semaforo:traffic light:5
+avenidas:avenues:5
+vecindad:neighbourhood:5
+escuelas:schools:5
+alumnado:student body:5
+ejercito:army:5
+soldados:soldiers:5
+castillo:castle:5
+palacios:palaces:5
+iglesias:churches:5
+mezquita:mosque:5
+catedral:cathedral:5
