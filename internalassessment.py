@@ -36,6 +36,59 @@ GREEN  = "#6aaa64"
 YELLOW = "#c9b458"
 GREY   = "#787c7e"
 
+window = tk.Tk()
+window.geometry("790x690")
+
+label = tk.Label(window, text = 'Bienvenido. Please sign up', font = ("Arial", 40, "bold"), fg = "black")
+label.place(x = 140, y = 345)
+
+def window_clear():
+    for widget in window.winfo_children():
+        widget.destroy()
+
+#sign up page
+def sign_up():
+    window_clear()
+    su_label = tk.Label(window, text = "Sign up", font = ("Arial", 30, "bold"))
+    su_label.place(x = 345, y = 100)
+    username_label = tk.Label(window, text = "Username", font = ("Arial", 18, "bold"))
+    username_label.place  (x = 200, y = 170)
+    password_label = tk.Label(window, text = "Password", font = ("Arial", 18, "bold"))
+    password_label.place  (x = 200, y = 200)
+    username_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
+    username_entry.place(x = 300, y = 170)
+    password_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
+    password_entry.place(x = 300, y = 200)
+    susave_button = tk.Button(window, text = "Sign up", font = ("Arial", 18, "bold"))
+    susave_button.place(x=345, y = 300)
+
+
+def log_in():
+    window_clear()
+    li_label = tk.Label(window, text = "Log in", font = ("Arial", 30, "bold"))
+    li_label.place(x = 345, y = 100)
+    username_label = tk.Label(window, text = "Username", font = ("Arial", 18, "bold"))
+    username_label.place(x = 200, y = 170)
+    password_label = tk.Label(window, text = "Password", font = ("Arial", 18, "bold"))
+    password_label.place(x = 200, y = 200)
+    username_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
+    username_entry.place(x = 300, y = 170)
+    password_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
+    password_entry.place(x = 300, y = 200)
+    lisave_button = tk.Button(window, text = "Log in", font = ("Arial", 18, "bold"))
+    lisave_button.place(x = 345, y = 300)
+
+
+signup_button = tk.Button(window, text = 'sign up here', font = ("Arial", 18, "bold" ), command = sign_up)
+signup_button.place(x=325, y =445)
+login_button = tk.Button(window, text = 'log in here', font = ("Arial", 18, "bold" ), command = log_in)
+login_button.place(x=325, y =480)
+
+
+
+# to do: work on data base part 
+     
+
 root = tk.Tk()
 root.title("Spanish Wordle")
 
