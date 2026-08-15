@@ -1,248 +1,452 @@
 import tkinter as tk
 import random
 import sqlite3
+import unicodedata
 
-from internalassessment import signupadd, loginadd
+from databasesetup import (
+    DATABASE_NAME,
+    create_or_get_player,
+    loginadd,
+    save_game_result,
+    mdp_decision,
+    signupadd,
 
-connection = sqlite3.connect("internalassessment.db")
-cursor = connection.cursor()
+)
+
+from databasesetup import create_database
+create_database()
 
 def word(hard):
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
     cursor.execute("""
-    SELECT spanish_word, translation
-    FROM words
-    WHERE difficulty = ?
+        SELECT id, spanish_word, translation
+        FROM words
+        WHERE difficulty = ?
     """, (hard,))
+
     database = cursor.fetchall()
+    connection.close()
     return database
-    
-hard = 4
-all = word(hard)
 
 
-chosen_word = random.choice(all)
-computer = chosen_word[0]
-translation = chosen_word[1]
+def normalise_word(value):
+    """Return a lowercase word with surrounding spaces removed."""
+    return value.strip().lower()
 
-print(chosen_word)
 
-letters = "abcdefghijklmnñopqrstuvwxyzáéíóúü"
-letters_list = []
-for i in letters:
-    letters_list.append(i)
+def choose_word(hard):
+    words = word(hard)
 
-row = 6
-column = len(computer)
+    if not words:
+        return None
 
-GREEN  = "#6aaa64"
+    return random.choice(words)
+
+
+LETTERS = "abcdefghijklmnñopqrstuvwxyzáéíóúü"
+LETTERS_SET = set(LETTERS)
+
+ROW_COUNT = 6
+GREEN = "#6aaa64"
 YELLOW = "#c9b458"
-GREY   = "#787c7e"
-
-window = tk.Tk()
-window.geometry("790x690")
-
-label = tk.Label(window, text = 'Bienvenido. Please sign up', font = ("Arial", 40, "bold"), fg = "black")
-label.place(x = 140, y = 345)
-
-def window_clear():
-    for widget in window.winfo_children():
-        widget.destroy()
-
-#sign up page
-def sign_up():
-    global username_entry
-    global password_entry
-    global signupmessage_label
-    window_clear()
-    su_label = tk.Label(window, text = "Sign up", font = ("Arial", 30, "bold"))
-    su_label.place(x = 345, y = 100)
-    username_label = tk.Label(window, text = "Username", font = ("Arial", 18, "bold"))
-    username_label.place  (x = 200, y = 170)
-    password_label = tk.Label(window, text = "Password", font = ("Arial", 18, "bold"))
-    password_label.place  (x = 200, y = 200)
-    username_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
-    username_entry.place(x = 300, y = 170)
-    password_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
-    password_entry.place(x = 300, y = 200)
-    susave_button = tk.Button(window, text = "Sign up", font = ("Arial", 18, "bold"))
-    susave_button.place(x=345, y = 300)
-    signupmessage_label = tk.Label(window, text = "", font = ("Arial", 18, "bold"))
-    signupmessage_label.place (x = 140, y = 345)
+GREY = "#787c7e"
 
 
-def log_in():
-    global username_entry
-    global password_entry
-    global loginmessage_label
-    window_clear()
-    li_label = tk.Label(window, text = "Log in", font = ("Arial", 30, "bold"))
-    li_label.place(x = 345, y = 100)
-    username_label = tk.Label(window, text = "Username", font = ("Arial", 18, "bold"))
-    username_label.place(x = 200, y = 170)
-    password_label = tk.Label(window, text = "Password", font = ("Arial", 18, "bold"))
-    password_label.place(x = 200, y = 200)
-    username_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
-    username_entry.place(x = 300, y = 170)
-    password_entry = tk.Entry(window, font = ("Arial", 18, "bold"))
-    password_entry.place(x = 300, y = 200)
-    lisave_button = tk.Button(window, text = "Log in", font = ("Arial", 18, "bold"))
-    lisave_button.place(x = 345, y = 300)
-    loginmessage_label = tk.Label(window, text = "", font = ("Arial", 18, "bold"))
-    loginmessage_label.place (x = 140, y = 345)
+class SpanishWordleApp:
+    def __init__(self, window):
+        self.window = window
+        self.window.title("Spanish Wordle")
+        self.window.geometry("790x690")
+        self.window.resizable(False, False)
 
+        self.username_entry = None
+        self.password_entry = None
+        self.message_label = None
+        self.logged_in_user_id = None
+        self.logged_in_username = None
 
-signup_button = tk.Button(window, text = 'sign up here', font = ("Arial", 18, "bold" ), command = sign_up)
-signup_button.place(x=325, y =445)
-login_button = tk.Button(window, text = 'log in here', font = ("Arial", 18, "bold" ), command = log_in)
-login_button.place(x=325, y =480)
+        self.show_welcome_page()
 
-#functino for signing up
+    def clear_window(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
 
-def actually_signup():
-    username = username_entry.get()
-    password = password_entry.get()
-    if username == "" or password == "":
-        signupmessage_label.config(text = "Signup invalid")
-        return
-    success, message = signupadd(username, password)
-    signupmessage_label(text = message)
+    def show_welcome_page(self):
+        self.clear_window()
 
-def actually_login():
-    username = username_entry.get()
-    password = password_entry.get()
-    if username == "" or password == "":
-        loginmessage_label.config(text = "login invalid")
-        return
-    success, userid, username = loginadd(username, password)
-    if success:
-        loginmessage_label.config(text = "login success")
-        opengame()
-    else:
-        loginmessage_label.config(text = "invalid")
+        label = tk.Label(
+            self.window,
+            text="Bienvenido. Please sign up",
+            font=("Arial", 30, "bold"),
+        )
+        label.place(x=140, y=200)
+
+        signup_button = tk.Button(
+            self.window,
+            text="Sign up here",
+            font=("Arial", 18, "bold"),
+            command=self.sign_up,
+        )
+        signup_button.place(x=325, y=350)
+
+        login_button = tk.Button(
+            self.window,
+            text="Log in here",
+            font=("Arial", 18, "bold"),
+            command=self.log_in,
+        )
+        login_button.place(x=325, y=410)
+
+    def sign_up(self):
+        self.clear_window()
+
+        su_label = tk.Label(
+            self.window, text="Sign up", font=("Arial", 30, "bold")
+        )
+        su_label.place(x=345, y=100)
+
+        username_label = tk.Label(
+            self.window, text="Username", font=("Arial", 18, "bold")
+        )
+        username_label.place(x=200, y=170)
+
+        password_label = tk.Label(
+            self.window, text="Password", font=("Arial", 18, "bold")
+        )
+        password_label.place(x=200, y=220)
+
+        self.username_entry = tk.Entry(
+            self.window, font=("Arial", 18, "bold")
+        )
+        self.username_entry.place(x=300, y=170)
+
+        self.password_entry = tk.Entry(
+            self.window, font=("Arial", 18, "bold"), show="*"
+        )
+        self.password_entry.place(x=300, y=220)
+
     
+        susave_button = tk.Button(
+            self.window,
+            text="Sign up",
+            font=("Arial", 18, "bold"),
+            command=self.actually_signup,
+        )
+        susave_button.place(x=345, y=300)
 
+        self.message_label = tk.Label(
+            self.window, text="", font=("Arial", 16, "bold")
+        )
+        self.message_label.place(x=100, y=350)
 
+        back_button = tk.Button(
+            self.window, text="Back", command=self.show_welcome_page
+        )
+        back_button.place(x=365, y=400)
 
-# to do: work on data base part 
+    def log_in(self):
+        self.clear_window()
 
+        li_label = tk.Label(
+            self.window, text="Log in", font=("Arial", 30, "bold")
+        )
+        li_label.place(x=345, y=100)
 
-def opengame():
-    window_clear()
+        username_label = tk.Label(
+            self.window, text="Username", font=("Arial", 18, "bold")
+        )
+        username_label.place(x=200, y=170)
+
+        password_label = tk.Label(
+            self.window, text="Password", font=("Arial", 18, "bold")
+        )
+        password_label.place(x=200, y=220)
+
+        self.username_entry = tk.Entry(
+            self.window, font=("Arial", 18, "bold")
+        )
+        self.username_entry.place(x=300, y=170)
+
+        self.password_entry = tk.Entry(
+            self.window, font=("Arial", 18, "bold"), show="*"
+        )
+        self.password_entry.place(x=300, y=220)
+
     
+        lisave_button = tk.Button(
+            self.window,
+            text="Log in",
+            font=("Arial", 18, "bold"),
+            command=self.actually_login,
+        )
+        lisave_button.place(x=345, y=300)
 
-    boxes = []
-    for i in range(row):
-        row_boxes = []
-        for w in range(column):
-            label = tk.Label(window, text = " ", width = 4, height = 2, font = ("Arial", 40, "bold"), bg = "white", fg = "black", relief= "raised", borderwidth = 1)
-            label.grid(row = i, column = w, padx =3, pady =3)
-            row_boxes.append(label)
-        boxes.append(row_boxes)
+        self.message_label = tk.Label(
+            self.window, text="", font=("Arial", 16, "bold")
+        )
+        self.message_label.place(x=100, y=350)
 
-    message = tk.Label(window, text = f"input {len(computer)} letters", font = ("Arial", 30))
+        back_button = tk.Button(
+            self.window, text="Back", command=self.show_welcome_page
+        )
+        back_button.place(x=365, y=400)
 
-    message.grid(row=6, column=0, columnspan=column, pady=20)
+    def actually_signup(self):
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get()
 
-
-    game_row = 0
-    game_guess = ""
-    game_over = False
-
-
-
-    def guess():
-        global game_row, game_guess, game_over
-        
-        complist=[]
-
-        for e in computer:
-                    complist.append(e)
-
-        for z in range(column):
-                if game_guess[z] == computer[z]:
-                    boxes[game_row][z].config(bg = GREEN)
-                    complist[z] = ""
-
-        for z in range(column):
-            if game_guess[z]==computer[z]:
-                continue
-
-            for_two = 0
-
-            for u in complist:
-                if u == game_guess[z]:
-                    for_two+=1
-
-            if for_two == 0:
-                    boxes[game_row][z].config(bg=GREY)
-            else:
-                boxes[game_row][z].config(bg = YELLOW)
-                complist.remove(game_guess[z])      
-
-        if game_guess == computer:
-            message.config(text = "muy bueno")
-            game_over = True
-        elif game_row == row-1: 
-            message.config(text = f"game over, it was {computer}")
-            game_over = True
-        else:
-            game_row += 1 
-            game_guess = ""
-
-    def keypressed(type):
-        global game_guess
-        if game_over:
+        if username == "" or password == "":
+            self.message_label.config(text="Username and password are required.")
             return
-        if type.keysym == "Return":
-            if len(game_guess) == column:
-                guess()
-            else:
-                message.config(text = f"please input a {column} letter word")
-        elif type.keysym == "BackSpace":
-            if len(game_guess) > 0:
-                game_guess = game_guess[:-1]
-                boxes[game_row][len(game_guess)].config(text = "")
-        elif type.char in letters_list:
-            if len(game_guess)<column: 
-                boxes[game_row][len(game_guess)].config(text = type.char.upper())
-                game_guess = game_guess + type.char.lower()
 
-        
-    window.bind("<Key>",keypressed)
-    col = 6
-    hints = 3
+        success, message = signupadd(username, password)
 
+    
+        self.message_label.config(text=message)
 
+        if success:
+            self.password_entry.delete(0, tk.END)
 
-    def givehints():
-        global x
-        global hints
-        global computer
-        if hints == 3:
-            for j in range(game_row, row):
-                if boxes[j][0].cget("bg") != GREEN:
-                    boxes[j][0].config(text=computer[0].upper())
-            hints -= 1
-            hint_button.config(text=f"hints:{hints}")
-        elif hints == 2:
-            for j in range(game_row, row):
-                if boxes[j][1].cget("bg") != GREEN:
-                    boxes[j][1].config(text=computer[1].upper())
-            hints -= 1
-            hint_button.config(text=f"hints:{hints}")
-        elif hints == 1:
-            for j in range(game_row, row):
-                if boxes[j][2].cget("bg") != GREEN:
-                    boxes[j][2].config(text=computer[2].upper())
-            hints -= 1
-            hint_button.config(text=f"hints:{hints}")
-            message.config(text = translation)
+    def actually_login(self):
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get()
+
+        if username == "" or password == "":
+            self.message_label.config(text="Username and password are required.")
+            return
+
+        success, user_id, username = loginadd(username, password)
+
+        if success:
+            self.logged_in_user_id = user_id
+            self.logged_in_username = username
+            self.open_game()
         else:
-            message.config(text="no hints left")
+            self.message_label.config(text="Invalid username or password.")
 
-    hint_button = tk.Button(window, text=f"hints:{hints}", font = ("Arial", 12), command = givehints)
-    hint_button.grid(row = 0, column = len(computer), padx = 2, pady=2, sticky = "ne")
+    def open_game(self):
+        self.clear_window()
+
+        selected_word = choose_word(4)
+
+        if selected_word is None:
+            error_label = tk.Label(
+                self.window,
+                text="No words are available for difficulty 4.",
+                font=("Arial", 20, "bold"),
+            )
+            error_label.pack(pady=100)
+            return
+
+        word_id, computer, translation = selected_word
+        computer = normalise_word(computer)
+
+        column_count = len(computer)
+
+        if column_count == 0:
+            tk.Label(
+                self.window,
+                text="The selected word is empty.",
+                font=("Arial", 20, "bold"),
+            ).pack(pady=100)
+            return
+
+        boxes = []
+        for i in range(ROW_COUNT):
+            row_boxes = []
+            for w in range(column_count):
+                label = tk.Label(
+                    self.window,
+                    text=" ",
+                    width=3,
+                    height=2,
+                    font=("Arial", 30, "bold"),
+                    bg="white",
+                    fg="black",
+                    relief="raised",
+                    borderwidth=1,
+                )
+                label.grid(row=i, column=w, padx=3, pady=3)
+                row_boxes.append(label)
+            boxes.append(row_boxes)
+
+        message = tk.Label(
+            self.window,
+            text=f"Input {column_count} letters",
+            font=("Arial", 22),
+        )
+        message.grid(
+            row=ROW_COUNT,
+            column=0,
+            columnspan=column_count,
+            pady=15,
+        )
+
+        game_row = 0
+        game_guess = ""
+        game_over = False
+        hints = 3
+        hint_position = 0
+
+        def finish_game(won):
+            nonlocal game_over
+            if game_over:
+                return
+
+            game_over = True
+            guesses_used = game_row + 1
+            save_game_result(
+                self.logged_in_user_id,
+                word_id,
+                won,
+                guesses_used,
+            )
+
+       
+        def guess():
+            nonlocal game_row, game_guess, game_over
+
+            if game_over:
+                return
+
+            guess_word = game_guess
+
+            remaining_counts = {}
+            results = ["grey"] * column_count
+
+            for index in range(column_count):
+                if guess_word[index] == computer[index]:
+                    results[index] = "green"
+                else:
+                    letter = computer[index]
+                    remaining_counts[letter] = remaining_counts.get(letter, 0) + 1
+
+            for index in range(column_count):
+                if results[index] == "green":
+                    continue
+
+                letter = guess_word[index]
+
+                if remaining_counts.get(letter, 0) > 0:
+                    results[index] = "yellow"
+                    remaining_counts[letter] -= 1
+
+            for index, result in enumerate(results):
+                if result == "green":
+                    boxes[game_row][index].config(bg=GREEN)
+                elif result == "yellow":
+                    boxes[game_row][index].config(bg=YELLOW)
+                else:
+                    boxes[game_row][index].config(bg=GREY)
+
+            if guess_word == computer:
+                message.config(text="Muy bueno!")
+                finish_game(True)
+            elif game_row == ROW_COUNT - 1:
+                message.config(text=f"Game over, it was {computer}")
+                finish_game(False)
+            else:
+                game_row += 1
+                game_guess = ""
+                message.config(text=f"Input {column_count} letters")
+
+        def keypressed(event):
+            nonlocal game_guess
+
+            if game_over:
+                return
+
+            if event.keysym == "Return":
+                if len(game_guess) == column_count:
+                    guess()
+                else:
+                    message.config(
+                        text=f"Please input a {column_count} letter word"
+                    )
+
+            elif event.keysym == "BackSpace":
+                if len(game_guess) > 0:
+                    game_guess = game_guess[:-1]
+                    boxes[game_row][len(game_guess)].config(text="")
+
+            elif event.char:
+                typed_character = normalise_word(event.char)
+
+                if (
+                    typed_character in LETTERS_SET
+                    and len(game_guess) < column_count
+                ):
+                    boxes[game_row][len(game_guess)].config(
+                        text=typed_character.upper()
+                    )
+                    game_guess += typed_character
+
+        self.window.bind("<Key>", keypressed)
+        self.window.focus_set()
+
+        def give_hints():
+            nonlocal hints, hint_position
+
+            if game_over:
+                return
+
+            if hints <= 0:
+                message.config(text="No hints left.")
+                return
+
+            if hint_position >= column_count:
+                message.config(text="All letter positions have been revealed.")
+                return
+            position = hint_position
+
+            for row_index in range(game_row, ROW_COUNT):
+                if boxes[row_index][position].cget("bg") != GREEN:
+                    boxes[row_index][position].config(
+                        text=computer[position].upper()
+                    )
+
+            hint_position += 1
+            hints -= 1
+            hint_button.config(text=f"Hints: {hints}")
+
+            if hints == 0:
+                message.config(text=f"Translation: {translation}")
+
+        hint_button = tk.Button(
+            self.window,
+            text=f"Hints: {hints}",
+            font=("Arial", 12),
+            command=give_hints,
+        )
+        hint_button.grid(
+            row=0,
+            column=column_count,
+            padx=5,
+            pady=5,
+            sticky="ne",
+        )
+
+        logout_button = tk.Button(
+            self.window,
+            text="Logout",
+            command=self.show_welcome_page,
+        )
+        logout_button.grid(
+            row=1,
+            column=column_count,
+            padx=5,
+            pady=5,
+            sticky="ne",
+        )
 
 
-window.mainloop()
-connection.close()
+def run_app():
+    window = tk.Tk()
+    app = SpanishWordleApp(window)
+    window.mainloop()
+
+
+if __name__ == "__main__":
+    run_app()
