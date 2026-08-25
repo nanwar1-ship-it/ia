@@ -53,9 +53,9 @@ def create_database():
     )
     """)
 
-    cursor.execcute("""
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS mdp_decision (
-        id INTEGER PRIMARY KEY AUTOINCREMENT
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         game_id INTEGER,
         user_id INTEGER,
         attempts_used INTEGER,
@@ -63,9 +63,10 @@ def create_database():
         correct_letters INTEGER,
         reward INTEGER,
         action TEXT NOT NULL,
-        FOREIGN KEY (game_id) REFERENCES game_results(id)
-        FOREIGN KEY (user_id) REFERNCES user(id))
-""")
+        FOREIGN KEY (game_id) REFERENCES game_results(id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+    """)
 
     connection.commit()
     connection.close()
@@ -148,9 +149,6 @@ def create_or_get_player(user_id, username):
 
 
 def save_game_result(player_id, word_id, won, guesses_used):
-    """
-    Saves the result of a completed game and updates the player's statistics.
-    """
     connection = sqlite3.connect(DATABASE_NAME)
     cursor = connection.cursor()
 
@@ -159,6 +157,8 @@ def save_game_result(player_id, word_id, won, guesses_used):
         VALUES (?, ?, ?, ?)
     """, (player_id, word_id, int(won), guesses_used))
 
+    game_id = cursor.lastrowid
+
     cursor.execute("""
         UPDATE players
         SET games_played = games_played + 1,
@@ -166,7 +166,12 @@ def save_game_result(player_id, word_id, won, guesses_used):
         WHERE id = ?
     """, (int(won), player_id))
 
-#function for saving mdp decisions 
+    connection.commit()
+    connection.close()
+
+    return game_id
+
+
 
 def mdp_decision(game_id, user_id, attempts_used, hints_remaining, correct_letters, reward, action ):
     connection = sqlite3.connect(DATABASE_NAME)
@@ -175,10 +180,11 @@ def mdp_decision(game_id, user_id, attempts_used, hints_remaining, correct_lette
         INSERT INTO mdp_decision(game_id, user_id, attempts_used, hints_remaining, correct_letters, reward, action) VALUES (?,?,?,?,?,?,?)
     """, (game_id, user_id, attempts_used, hints_remaining, correct_letters, reward, action))
 
-
-
     connection.commit()
     connection.close()
+    
+
+
 
 create_database()
 
