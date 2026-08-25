@@ -42,6 +42,7 @@ def choose_word(hard):
     if not words:
         return None
 
+    print(random.choice(words))
     return random.choice(words)
 
 
@@ -67,9 +68,12 @@ class SpanishWordleApp:
         self.logged_in_user_id = None
         self.logged_in_username = None
 
+        self.current_difficulty = 2 
+
         self.show_welcome_page()
 
     def clear_window(self):
+        self.window.unbind("<Key>")
         for widget in self.window.winfo_children():
             widget.destroy()
 
@@ -226,10 +230,49 @@ class SpanishWordleApp:
         else:
             self.message_label.config(text="Invalid username or password.")
 
+    def update_mdp_difficulty(self, game_id, won, guesses_used, hints_left):
+        user_id = self.logged_in_user_id
+        hints_used = 3 - hints_left
+        
+        if won:
+            if guesses_used <= 2:
+                reward = 1
+                action = "INCREASE"
+            elif 3 <= guesses_used <= 5:
+                reward = 10
+                action = "MAINTAIN"
+            else:
+                reward = 2
+                action = "DECREASE"
+        else:
+            reward = -5
+            action = "DECREASE"
+
+        reward -= (hints_used * 2)
+
+        if action == "INCREASE":
+            next_difficulty = min(self.current_difficulty + 1, 5)
+        elif action == "DECREASE":
+            next_difficulty = max(self.current_difficulty - 1, 1)
+        else:
+            next_difficulty = self.current_difficulty
+
+        mdp_decision(
+            game_id=game_id,
+            user_id=user_id,
+            attempts_used=guesses_used,
+            hints_remaining=hints_left,
+            correct_letters=0,
+            reward=reward,
+            action=action
+        )
+
+        self.current_difficulty = next_difficulty
+    
     def open_game(self):
         self.clear_window()
 
-        selected_word = choose_word(4)
+        selected_word = choose_word(self.current_difficulty)
 
         if selected_word is None:
             error_label = tk.Label(
@@ -239,7 +282,7 @@ class SpanishWordleApp:
             )
             error_label.pack(pady=100)
             return
-
+    
         word_id, computer, translation = selected_word
         computer = normalise_word(computer)
 
@@ -252,7 +295,6 @@ class SpanishWordleApp:
                 font=("Arial", 20, "bold"),
             ).pack(pady=100)
             return
-
         boxes = []
         for i in range(ROW_COUNT):
             row_boxes = []
@@ -297,11 +339,19 @@ class SpanishWordleApp:
 
             game_over = True
             guesses_used = game_row + 1
-            save_game_result(
-                self.logged_in_user_id,
-                word_id,
-                won,
-                guesses_used,
+    
+   
+            game_id = save_game_result(
+            self.logged_in_user_id,
+            word_id,
+            won,
+            guesses_used,
+            )
+            self.update_mdp_difficulty(
+            game_id=game_id,
+            won=won,
+            guesses_used=guesses_used,
+            hints_left=hints
             )
 
        
@@ -440,6 +490,7 @@ class SpanishWordleApp:
             pady=5,
             sticky="ne",
         )
+
 
 
 def run_app():
