@@ -1,11 +1,10 @@
 import tkinter as tk
 import random
 import sqlite3
-import unicodedata
 
 from databasesetup import (
     DATABASE_NAME,
-    create_or_get_player,
+    update_difficulty,
     loginadd,
     save_game_result,
     mdp_decision,
@@ -42,8 +41,10 @@ def choose_word(hard):
     if not words:
         return None
 
-    print(random.choice(words))
-    return random.choice(words)
+    the_word = random.choice(words)
+
+    print(the_word)
+    return the_word
 
 
 LETTERS = "abcdefghijklmnñopqrstuvwxyzáéíóúü"
@@ -221,11 +222,12 @@ class SpanishWordleApp:
             self.message_label.config(text="Username and password are required.")
             return
 
-        success, user_id, username = loginadd(username, password)
+        success, user_id, username, difficulty = loginadd(username, password)
 
         if success:
             self.logged_in_user_id = user_id
             self.logged_in_username = username
+            self.current_difficulty = difficulty
             self.open_game()
         else:
             self.message_label.config(text="Invalid username or password.")
@@ -268,9 +270,18 @@ class SpanishWordleApp:
         )
 
         self.current_difficulty = next_difficulty
+        update_difficulty(
+            self.logged_in_user_id,
+            self.current_difficulty
+        )
+
+        print("MDP ACTION:", action)
+        print("MDP REWARD", reward)
+        print("NEW DIFFICULTY:", self.current_difficulty)
     
     def open_game(self):
         self.clear_window()
+        print("Starting game at difficulty:", self.current_difficulty)
 
         selected_word = choose_word(self.current_difficulty)
 
@@ -501,3 +512,8 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
+
+
+#pattern recognition stuff: increase the value of the word - so that it's more likely to come up, kind of like a stack 
+#all of the wrong words into a stack or queue that way it like builds up 
+#question wrong puts it into a structure with like an algorithm to organise it easiest to hardest 
