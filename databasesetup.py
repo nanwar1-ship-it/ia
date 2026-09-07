@@ -18,7 +18,8 @@ def create_database():
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         games_played INTEGER NOT NULL DEFAULT 0,
-        games_won INTEGER NOT NULL DEFAULT 0
+        games_won INTEGER NOT NULL DEFAULT 0,
+        difficulty INTEGER NOT NULL DEFAULT 1
     )
     """)
 
@@ -108,7 +109,7 @@ def loginadd(username, password):
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT id, username
+        SELECT id, username, difficulty
         FROM users
         WHERE username = ? AND password = ?
     """, (username, password))
@@ -117,9 +118,21 @@ def loginadd(username, password):
     connection.close()
 
     if user:
-        return True, user[0], user[1]
+        return True, user[0], user[1], user[2]
 
-    return False, None, None
+    return False, None, None, None
+
+def update_difficulty(user_id, difficulty):
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE users
+        SET difficulty = ?
+        WHERE id = ?""", (difficulty, user_id))
+    connection.commit()
+    connection.close()
+
+
 
 
 def create_or_get_player(user_id, username):
@@ -148,14 +161,14 @@ def create_or_get_player(user_id, username):
     return player_id
 
 
-def save_game_result(player_id, word_id, won, guesses_used):
+def save_game_result(user_id, word_id, won, guesses_used):
     connection = sqlite3.connect(DATABASE_NAME)
     cursor = connection.cursor()
 
     cursor.execute("""
-        INSERT INTO game_results(player_id, word_id, won, guesses_used)
+        INSERT INTO game_results(user_id, word_id, won, guesses_used)
         VALUES (?, ?, ?, ?)
-    """, (player_id, word_id, int(won), guesses_used))
+    """, (user_id, word_id, int(won), guesses_used))
 
     game_id = cursor.lastrowid
 
@@ -164,7 +177,7 @@ def save_game_result(player_id, word_id, won, guesses_used):
         SET games_played = games_played + 1,
             games_won = games_won + ?
         WHERE id = ?
-    """, (int(won), player_id))
+    """, (int(won), user_id))
 
     connection.commit()
     connection.close()
